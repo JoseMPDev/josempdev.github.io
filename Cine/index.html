@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luz y Arte - Estudio Fotográfico</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Global Styles */
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background-color: #c29d77;
+        color: #ffeb3b;
+        padding: 15px 0;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      nav ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      nav a {
+        text-decoration: none;
+        color: #ffeb3b;
+        font-weight: bold;
+        padding: 10px;
+        transition: color 0.3s, transform 0.3s;
+      }
+      nav a:hover {
+        color: #ffd700;
+        transform: scale(1.1);
+      }
+      .hero {
+        text-align: center;
+        padding: 80px;
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.4)
+          ),
+          url('hero.jpg') no-repeat center center/cover;
+        color: #ffeb3b;
+        font-size: 2em;
+        animation: fadeIn 2s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      section {
+        padding: 50px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 1s ease-in-out forwards;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .service-card {
+        display: inline-block;
+        background: white;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .service-card:hover {
+        transform: scale(1.05);
+      }
+      .testimonial-card {
+        background: white;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        text-align: left;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .testimonial-card p {
+        font-style: italic;
+      }
+      .testimonial-card h4 {
+        margin-top: 15px;
+        color: #ffeb3b;
+      }
+      .about-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: left;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .about-content img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .contact-form {
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: left;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .contact-form label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+      }
+      .contact-form input,
+      .contact-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        color: #333; /* Texto en los campos para legibilidad */
+        background-color: #fff;
+      }
+      .contact-form button {
+        background-color: #c29d77;
+        color: #ffeb3b;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.3s;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .contact-form button:hover {
+        background-color: #495057;
+        transform: scale(1.05);
+      }
+      .contact-info {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1em;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .contact-info p {
+        margin: 5px 0;
+      }
+      footer {
+        background-color: #333333;
+        color: #ffeb3b;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      footer p {
+        margin: 0;
+      }
+      footer a {
+        color: #ffeb3b;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      footer a:hover {
+        color: #ffd700;
+      }
+      /* Media Query para dispositivos móviles */
+      @media (max-width: 768px) {
+        nav ul {
+          flex-direction: column;
+        }
+        .service-card {
+          width: 90%;
+        }
+        .hero {
+          padding: 60px 20px;
+          font-size: 1.5em;
+        }
+      }
+.interactive-images {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .interactive-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .interactive-image:hover {
+            transform: scale(1.1);
+        }
+
+        .interactive-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .modal-content#img01 {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                width: 100%;
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Encabezado y Menú -->
+    <header>
+      <h1>Luz y Arte</h1>
+      <nav>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Sección Héroe -->
+    <section id="inicio" class="hero">
+      <h2>Capturamos momentos inolvidables</h2>
+    </section>
+	<section id="imagenes-interactivas">
+        <h2>Explora Nuestro Trabajo</h2>
+        <div class="interactive-images">
+            <div class="interactive-image">
+                <img src="imagen1.jpg" alt="Imagen 1" 	onclick="openModal('imagen1.jpg')" />
+            </div>
+            <div class="interactive-image">
+                <img src="imagen2.jpg" alt="Imagen 2" 	onclick="openModal('imagen2.jpg')" />
+            </div>
+            <div class="interactive-image">
+                <img src="imagen3.jpg" alt="Imagen 3" o	nclick="openModal('imagen3.jpg')" />
+            </div>
+        </div>
+    </section>
+
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01" />
+    </div>
+    <!-- Sección de Servicios -->
+    <section id="servicios">
+      <h2>Nuestros Servicios</h2>
+      <div class="service-card">
+        <h3>Fotografía de Bodas</h3>
+        <p>Capturamos los momentos más especiales de tu gran día.</p>
+      </div>
+      <div class="service-card">
+        <h3>Sesiones Familiares</h3>
+        <p>Retratos familiares para guardar recuerdos inolvidables.</p>
+      </div>
+      <div class="service-card">
+        <h3>Fotografía Corporativa</h3>
+        <p>Imágenes profesionales para tu empresa o marca.</p>
+      </div>
+      <div class="service-card">
+        <h3>Fotografía de Producto</h3>
+        <p>Fotografías de alta calidad para potenciar la imagen de tus productos.</p>
+      </div>
+      <div class="service-card">
+        <h3>Sesiones de Retrato</h3>
+        <p>Fotografías individuales con un toque artístico y profesional.</p>
+      </div>
+    </section>
+
+    <!-- Sección Sobre Nosotros -->
+    <section id="nosotros">
+      <h2>Sobre Nosotros</h2>
+      <div class="about-content">
+        <img src="arte y luz.jpg" alt="Nuestro estudio" />
+        <p>
+          En <strong>Luz y Arte</strong>, nos apasiona la fotografía. Nuestro equipo de profesionales está comprometido a capturar la esencia y la emoción de cada momento. Con años de experiencia, ofrecemos un servicio personalizado para garantizar que cada sesión sea única y memorable.
+        </p>
+        <p>
+          Creemos en la importancia de contar historias a través de imágenes, y trabajamos en conjunto con nuestros clientes para plasmar sus sueños y visiones en cada fotografía.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección Testimonios -->
+    <section id="testimonios">
+      <h2>Testimonios</h2>
+      <div class="testimonial-card">
+        <p>
+          “Luz y Arte transformó nuestros momentos en recuerdos eternos. La atención al detalle y la profesionalidad fueron excepcionales.”
+        </p>
+        <h4>- Ana Martínez</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>
+          “Un equipo talentoso y comprometido. Recomiendo sus servicios a cualquiera que busque capturar la esencia de sus eventos.”
+        </p>
+        <h4>- Carlos Gómez</h4>
+      </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto">
+      <h2>Contacto</h2>
+      <div class="contact-form">
+        <form id="contactForm" novalidate>
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+
+          <label for="email">Correo Electrónico:</label>
+          <input type="email" id="email" name="email" placeholder="Tu correo electrónico" required />
+
+          <label for="ubicacion">Ubicación:</label>
+          <input type="text" id="ubicacion" name="ubicacion" placeholder="Tu ubicación" required />
+
+          <label for="telefono">Número de Contacto:</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="Tu número de contacto" required />
+
+          <label for="mensaje">Mensaje:</label>
+          <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí" required></textarea>
+
+          <button type="submit">Enviar Mensaje</button>
+        </form>
+        <!-- Información de Contacto del Estudio -->
+        <div class="contact-info">
+          <p><strong>Ubicación:</strong> Av. de la Fotografía 123, Ciudad Creativa, País</p>
+          <p><strong>Teléfono:</strong> +34 987 654 321</p>
+          <p><strong>Email:</strong> contacto@luzyarte.com</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pie de Página -->
+    <footer>
+      <p>
+        &copy; 2025 Luz y Arte - Todos los derechos reservados | <a href="#">Política de Privacidad</a>
+      </p>
+    </footer>
+
+    <!-- Script de Validación del Formulario -->
+    <script>
+      document.getElementById('contactForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var nombre = document.getElementById('nombre').value.trim();
+        var email = document.getElementById('email').value.trim();
+        var ubicacion = document.getElementById('ubicacion').value.trim();
+        var telefono = document.getElementById('telefono').value.trim();
+        var mensaje = document.getElementById('mensaje').value.trim();
+
+        if (
+          nombre === '' ||
+          email === '' ||
+          ubicacion === '' ||
+          telefono === '' ||
+          mensaje === ''
+        ) {
+          alert('Por favor, completa todos los campos.');
+          return;
+        }
+
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+          alert('Por favor, ingresa un correo electrónico válido.');
+          return;
+        }
+
+        if (isNaN(telefono)) {
+          alert('Por favor, ingresa un número de contacto válido.');
+          return;
+        }
+
+        alert('¡Mensaje enviado con éxito!');
+        document.getElementById('contactForm').reset();
+      });
+	function openModal(src) {
+            var modal = document.getElementById('myModal');
+            var modalImg = document.getElementById('img01');
+            modal.style.display = 'block';
+            modalImg.src = src;
+
+            var span = document.getElementsByClassName('close')[0];
+            span.onclick = function () {
+                modal.style.display = 'none';
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+    </script>
+  </body>
+</html>
