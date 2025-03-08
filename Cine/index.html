@@ -55,6 +55,11 @@
         font-size: 2em;
         animation: fadeIn 2s ease-in-out;
       }
+      /* Ajuste para que la sección héroe se muestre sin desaparecer */
+      section.hero {
+        opacity: 1 !important;
+        transform: none !important;
+      }
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -206,7 +211,7 @@
           font-size: 1.5em;
         }
       }
-.interactive-images {
+	.interactive-images {
             display: flex;
             justify-content: space-around;
             margin-top: 30px;
@@ -308,17 +313,18 @@
     <section id="inicio" class="hero">
       <h2>Capturamos momentos inolvidables</h2>
     </section>
-	<section id="imagenes-interactivas">
+
+<section id="imagenes-interactivas">
         <h2>Explora Nuestro Trabajo</h2>
         <div class="interactive-images">
             <div class="interactive-image">
-                <img src="imagen1.jpg" alt="Imagen 1" 	onclick="openModal('imagen1.jpg')" />
+                <img src="imagen1.jpg" alt="Imagen 1" onclick="openModal('imagen1.jpg')" />
             </div>
             <div class="interactive-image">
-                <img src="imagen2.jpg" alt="Imagen 2" 	onclick="openModal('imagen2.jpg')" />
+                <img src="imagen2.jpg" alt="Imagen 2" onclick="openModal('imagen2.jpg')" />
             </div>
             <div class="interactive-image">
-                <img src="imagen3.jpg" alt="Imagen 3" o	nclick="openModal('imagen3.jpg')" />
+                <img src="imagen3.jpg" alt="Imagen 3" onclick="openModal('imagen3.jpg')" />
             </div>
         </div>
     </section>
@@ -327,6 +333,7 @@
         <span class="close">&times;</span>
         <img class="modal-content" id="img01" />
     </div>
+
     <!-- Sección de Servicios -->
     <section id="servicios">
       <h2>Nuestros Servicios</h2>
@@ -356,7 +363,7 @@
     <section id="nosotros">
       <h2>Sobre Nosotros</h2>
       <div class="about-content">
-        <img src="arte y luz.jpg" alt="Nuestro estudio" />
+        <img src="about.jpg" alt="Nuestro estudio" />
         <p>
           En <strong>Luz y Arte</strong>, nos apasiona la fotografía. Nuestro equipo de profesionales está comprometido a capturar la esencia y la emoción de cada momento. Con años de experiencia, ofrecemos un servicio personalizado para garantizar que cada sesión sea única y memorable.
         </p>
@@ -407,7 +414,7 @@
         </form>
         <!-- Información de Contacto del Estudio -->
         <div class="contact-info">
-          <p><strong>Ubicación:</strong> Av. de la Fotografía 123, Ciudad Creativa, País</p>
+          <p><strong>Ubicación:</strong> Av. de la Fotografía 123, santo domingo, republica dominicana</p>
           <p><strong>Teléfono:</strong> +34 987 654 321</p>
           <p><strong>Email:</strong> contacto@luzyarte.com</p>
         </div>
@@ -431,13 +438,7 @@
         var telefono = document.getElementById('telefono').value.trim();
         var mensaje = document.getElementById('mensaje').value.trim();
 
-        if (
-          nombre === '' ||
-          email === '' ||
-          ubicacion === '' ||
-          telefono === '' ||
-          mensaje === ''
-        ) {
+        if (nombre === '' || email === '' || ubicacion === '' || telefono === '' || mensaje === '') {
           alert('Por favor, completa todos los campos.');
           return;
         }
