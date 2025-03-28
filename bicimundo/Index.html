@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiciMundo - Tu Tienda de Bicicletas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Estilos Personalizados -->
+    <style>
+        /* Variables de colores */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+
+        /* Estilo general */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Estilo para el navbar */
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        /* Estilo para la sección hero */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('logo.png');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            color: white;
+            padding-top: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .btn-hero {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+        }
+
+        /* Estilo para los productos */
+        .products-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dark-color);
+        }
+
+        .card {
+            transition: transform 0.3s ease;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Estilo para el formulario de contacto */
+        .contact-section {
+            padding: 60px 0;
+            background-color: var(--light-color);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-control {
+            border-radius: 30px;
+            padding: 15px 20px;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Estilo para el footer */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Estilo para el botón de volver arriba */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Estilo para el menú desplegable */
+        .dropdown-menu {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Media Queries para dispositivos móviles */
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 70vh;
+                text-align: center;
+            }
+
+            .hero-content {
+                margin: 0 20px;
+            }
+
+            .products-section, .contact-section {
+                padding: 40px 0;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de volver arriba -->
+    <a href="#" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">BiciMundo</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            Productos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#mountain-bikes">Bicicletas de Montaña</a></li>
+                            <li><a class="dropdown-item" href="#road-bikes">Bicicletas de Carretera</a></li>
+                            <li><a class="dropdown-item" href="#urban-bikes">Bicicletas Urbanas</a></li>
+                            <li><a class="dropdown-item" href="#accessories">Accesorios</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Las mejores bicicletas para tu aventura</h1>
+                <p>Descubre nuestra selección de bicicletas de montaña, carretera y urbanas.</p>
+                <a href="#products" class="btn btn-hero btn-success">Ver Productos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <h2 class="section-title">Productos Destacados</h2>
+            <div class="row">
+                <!-- Product 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="imagesmont.jfif" width="200" height="100"class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Bicicleta de Montaña Profesional</h5>
+                            <p class="card-text">Ideal para terrenos difíciles. Suspensión completa y cambios de 24 velocidades.</p>
+                            <h4 class="price">$1,499.99</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="biciligera.jfif" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Bicicleta de Carretera Ligera</h5>
+                            <p class="card-text">Ligera y rápida. Cambios Shimano de 16 velocidades y cuadro de aluminio.</p>
+                            <h4 class="price">$1,699.99</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="urbana.jfif" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Bicicleta Eléctrica Urbana</h5>
+                            <p class="card-text">Asistencia eléctrica hasta 25 km/h. Batería extraíble y autonomía de 40 km.</p>
+                            <h4 class="price">$1,999.99</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contáctanos</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="name" placeholder="Nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control" id="email" placeholder="Email" required>
+                    </div>
+                    <div class="col-12">
+                        <textarea class="form-control" id="message" rows="5" placeholder="Mensaje" required></textarea>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-submit btn-primary">Enviar Mensaje</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">BiciMundo</h3>
+                    <p>Somos una tienda dedicada a proporcionar las mejores bicicletas y accesorios para que disfrutes de tu pasión por el ciclismo.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Enlaces Rápidos</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#products">Productos</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Síguenos</h3>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/bicimundo" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/bicimundo" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.twitter.com/bicimundo" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BiciMundo. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script Personalizado -->
+    <script>
+        // Validación del formulario de contacto
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            let isValid = true;
+            
+            // Validación de campos vacíos
+            if (!name) {
+                showError('Por favor ingresa tu nombre');
+                isValid = false;
+            }
+            
+            if (!email) {
+                showError('Por favor ingresa tu email');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError('Por favor ingresa un email válido');
+                isValid = false;
+            }
+            
+            if (!message) {
+                showError('Por favor ingresa un mensaje');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Simulación de envío de correo
+                sendEmail(name, email, message);
+                showSuccess('¡Mensaje enviado correctamente!');
+                this.reset();
+            }
+        });
+
+        // Función para mostrar errores
+        function showError(message) {
+            alert(message);
+        }
+
+        // Función para validar email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Función para mostrar éxito
+        function showSuccess(message) {
+            alert(message);
+        }
+
+        // Función para simular el envío de correo
+        function sendEmail(name, email, message) {
+            // En una implementación real, aquí se enviaría el formulario a un servidor
+            console.log(`Nombre: ${name}`);
+            console.log(`Email: ${email}`);
+            console.log(`Mensaje: ${message}`);
+            
+            // Aquí puedes integrar una API de correo real
+            // como EmailJS, Formspree u otro servicio
+        }
+
+        // Función para el botón de volver arriba
+        document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mostrar u ocultar el botón de volver arriba según el scroll
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
