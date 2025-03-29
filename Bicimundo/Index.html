@@ -8,41 +8,67 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- AOS CSS para animaciones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <!-- Estilos Personalizados -->
     <style>
         /* Variables de colores */
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #28a745;
-            --dark-color: #343a40;
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
             --light-color: #f8f9fa;
+            --accent-color: #e74c3c;
         }
 
         /* Estilo general */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
+            color: #444;
         }
 
         /* Estilo para el navbar */
         .navbar {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             position: fixed;
             width: 100%;
             z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 15px 0;
+        }
+
+        .navbar.scrolled {
+            padding: 8px 0;
+            background-color: rgba(52, 152, 219, 0.95) !important;
         }
 
         .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 8px 15px !important;
+            margin: 0 5px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
         }
 
         /* Estilo para la sección hero */
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('logo.png');
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)), url('logo.png');
             background-size: cover;
             background-position: center;
-            height: 80vh;
+            background-attachment: fixed;
+            height: 100vh;
             color: white;
             padding-top: 80px;
             display: flex;
@@ -50,113 +76,190 @@
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 700px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
         }
 
         .btn-hero {
             padding: 12px 30px;
             font-size: 1.1rem;
-            border-radius: 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-hero:active {
+            transform: translateY(-1px);
         }
 
         /* Estilo para los productos */
         .products-section {
-            padding: 60px 0;
+            padding: 100px 0;
             background-color: white;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
             color: var(--dark-color);
+            position: relative;
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .card {
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            height: 100%;
         }
 
         .card-img-top {
-            height: 200px;
+            height: 250px;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
         .card-body {
-            padding: 20px;
+            padding: 25px;
         }
 
         .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .card-text {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1rem;
         }
 
         .price {
-            color: var(--secondary-color);
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin-top: 10px;
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 15px;
+            display: inline-block;
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .card:hover .card-img-top {
+            transform: scale(1.05);
         }
 
         /* Estilo para el formulario de contacto */
         .contact-section {
-            padding: 60px 0;
+            padding: 100px 0;
             background-color: var(--light-color);
+            background-image: linear-gradient(135deg, #f8f9fa 25%, #edf2f7 25%, #edf2f7 50%, #f8f9fa 50%, #f8f9fa 75%, #edf2f7 75%, #edf2f7 100%);
+            background-size: 40px 40px;
         }
 
         .contact-form {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .form-control {
             border-radius: 30px;
-            padding: 15px 20px;
+            padding: 15px 25px;
             font-size: 1rem;
+            border: 1px solid #e1e1e1;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+            border-color: var(--primary-color);
         }
 
         .btn-submit {
             padding: 15px 30px;
             font-size: 1.1rem;
-            border-radius: 30px;
+            border-radius: 50px;
             width: 100%;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-submit:hover {
             background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         /* Estilo para el footer */
         .footer {
             background-color: var(--dark-color);
             color: white;
-            padding: 40px 0;
+            padding: 80px 0 40px;
         }
 
         .footer-content {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 40px;
         }
 
         .footer-section {
             flex: 1;
-            min-width: 200px;
-            margin-bottom: 20px;
+            min-width: 250px;
         }
 
         .footer-title {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            font-weight: 600;
         }
 
         .footer-title::after {
@@ -165,8 +268,22 @@
             left: 0;
             bottom: 0;
             width: 50px;
-            height: 2px;
+            height: 3px;
             background-color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer ul li {
+            margin-bottom: 12px;
         }
 
         .social-links {
@@ -178,22 +295,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background-color: rgba(255,255,255,0.1);
             border-radius: 50%;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
 
         .social-links a:hover {
             background-color: var(--secondary-color);
+            transform: translateY(-5px);
         }
 
         .footer-bottom {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 50px;
             padding-top: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
         }
 
         /* Estilo para el botón de volver arriba */
@@ -209,36 +328,81 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         .back-to-top:hover {
             background-color: var(--secondary-color);
+            transform: translateY(-5px);
         }
 
         /* Estilo para el menú desplegable */
         .dropdown-menu {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: none;
+            padding: 15px 0;
+            margin-top: 15px;
         }
 
         .dropdown-item {
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            padding: 10px 25px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
         }
 
         .dropdown-item:hover {
-            background-color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* Estilo para los badge */
+        .badge-new {
+            background-color: var(--accent-color);
             color: white;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+            border-radius: 30px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        /* Animaciones */
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Media Queries para dispositivos móviles */
+        @media (max-width: 991px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .card-deck {
+                flex-direction: column;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-section {
-                height: 70vh;
+                height: 100vh;
                 text-align: center;
             }
 
@@ -246,13 +410,25 @@
                 margin: 0 20px;
             }
 
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
             .products-section, .contact-section {
-                padding: 40px 0;
+                padding: 60px 0;
             }
 
             .footer-content {
                 flex-direction: column;
                 gap: 30px;
+            }
+
+            .contact-form {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -282,7 +458,7 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#mountain-bikes">Bicicletas de Montaña</a></li>
                             <li><a class="dropdown-item" href="#road-bikes">Bicicletas de Carretera</a></li>
-                            <li><a class="dropdown-item" href="#urban-bikes">Bicicletas Urbanas</a></li>
+                            <li><a class="dropdown-item" href="#urban-bikes">Bicicletas Urbanas <span class="badge-new">Nuevo</span></a></li>
                             <li><a class="dropdown-item" href="#accessories">Accesorios</a></li>
                         </ul>
                     </li>
@@ -297,10 +473,10 @@
     <!-- Hero Section -->
     <section id="home" class="hero-section">
         <div class="container">
-            <div class="hero-content">
+            <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
                 <h1>Las mejores bicicletas para tu aventura</h1>
-                <p>Descubre nuestra selección de bicicletas de montaña, carretera y urbanas.</p>
-                <a href="#products" class="btn btn-hero btn-success">Ver Productos</a>
+                <p>Descubre nuestra selección de bicicletas de montaña, carretera y urbanas, diseñadas para brindarte la mejor experiencia en cada terreno.</p>
+                <a href="#products" class="btn btn-hero btn-success">Explorar Productos</a>
             </div>
         </div>
     </section>
@@ -308,38 +484,41 @@
     <!-- Featured Products -->
     <section id="products" class="products-section">
         <div class="container">
-            <h2 class="section-title">Productos Destacados</h2>
+            <h2 class="section-title" data-aos="fade-up">Productos Destacados</h2>
             <div class="row">
                 <!-- Product 1 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="imagesmont.jfif" width="200" height="100"class="card-img-top">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <img src="imagesmont.jfif" class="card-img-top" alt="Bicicleta de Montaña">
                         <div class="card-body">
                             <h5 class="card-title">Bicicleta de Montaña Profesional</h5>
-                            <p class="card-text">Ideal para terrenos difíciles. Suspensión completa y cambios de 24 velocidades.</p>
+                            <p class="card-text">Ideal para terrenos difíciles. Suspensión completa y cambios de 24 velocidades con componentes de alta gama.</p>
                             <h4 class="price">$1,499.99</h4>
+                            <a href="#" class="btn btn-primary mt-3">Ver detalles</a>
                         </div>
                     </div>
                 </div>
                 <!-- Product 2 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="biciligera.jfif" class="card-img-top">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <img src="biciligera.jfif" class="card-img-top" alt="Bicicleta de Carretera">
                         <div class="card-body">
                             <h5 class="card-title">Bicicleta de Carretera Ligera</h5>
-                            <p class="card-text">Ligera y rápida. Cambios Shimano de 16 velocidades y cuadro de aluminio.</p>
+                            <p class="card-text">Ligera y rápida. Cambios Shimano de 16 velocidades y cuadro de aluminio de alta resistencia para largas distancias.</p>
                             <h4 class="price">$1,699.99</h4>
+                            <a href="#" class="btn btn-primary mt-3">Ver detalles</a>
                         </div>
                     </div>
                 </div>
                 <!-- Product 3 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="urbana.jfif" class="card-img-top">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100">
+                        <img src="urbana.jfif" class="card-img-top" alt="Bicicleta Eléctrica">
                         <div class="card-body">
                             <h5 class="card-title">Bicicleta Eléctrica Urbana</h5>
-                            <p class="card-text">Asistencia eléctrica hasta 25 km/h. Batería extraíble y autonomía de 40 km.</p>
+                            <p class="card-text">Asistencia eléctrica hasta 25 km/h. Batería extraíble y autonomía de 40 km. Perfecta para desplazamientos urbanos.</p>
                             <h4 class="price">$1,999.99</h4>
+                            <a href="#" class="btn btn-primary mt-3">Ver detalles</a>
                         </div>
                     </div>
                 </div>
@@ -350,8 +529,8 @@
     <!-- Contact Form -->
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2 class="section-title">Contáctanos</h2>
-            <form id="contactForm" class="contact-form">
+            <h2 class="section-title" data-aos="fade-up">Contáctanos</h2>
+            <form id="contactForm" class="contact-form" data-aos="fade-up" data-aos-delay="100">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <input type="text" class="form-control" id="name" placeholder="Nombre" required>
@@ -376,7 +555,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3 class="footer-title">BiciMundo</h3>
-                    <p>Somos una tienda dedicada a proporcionar las mejores bicicletas y accesorios para que disfrutes de tu pasión por el ciclismo.</p>
+                    <p>Somos una tienda dedicada a proporcionar las mejores bicicletas y accesorios para que disfrutes de tu pasión por el ciclismo en cualquier terreno.</p>
                 </div>
                 <div class="footer-section">
                     <h3 class="footer-title">Enlaces Rápidos</h3>
@@ -384,6 +563,7 @@
                         <li><a href="#home">Inicio</a></li>
                         <li><a href="#products">Productos</a></li>
                         <li><a href="#contact">Contacto</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -392,6 +572,11 @@
                         <a href="https://www.facebook.com/bicimundo" target="_blank"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://www.instagram.com/bicimundo" target="_blank"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.twitter.com/bicimundo" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.youtube.com/bicimundo" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <div class="mt-4">
+                        <p><i class="fas fa-envelope me-2"></i> info@bicimundo.com</p>
+                        <p><i class="fas fa-phone me-2"></i> +1 (234) 567-8900</p>
                     </div>
                 </div>
             </div>
@@ -403,8 +588,38 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS para animaciones -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <!-- Script Personalizado -->
     <script>
+        // Inicializar AOS (Animaciones)
+        AOS.init({
+            duration: 800,
+            easing: 'ease',
+            once: true,
+            offset: 100
+        });
+
+        // Cambiar estilo de navbar al hacer scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            // Navbar scrolled effect
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Back to top button
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
         // Validación del formulario de contacto
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -437,14 +652,31 @@
             if (isValid) {
                 // Simulación de envío de correo
                 sendEmail(name, email, message);
-                showSuccess('¡Mensaje enviado correctamente!');
+                showSuccess('¡Mensaje enviado correctamente! Te responderemos a la brevedad.');
                 this.reset();
             }
         });
 
         // Función para mostrar errores
         function showError(message) {
-            alert(message);
+            const alertBox = document.createElement('div');
+            alertBox.className = 'alert alert-danger alert-dismissible fade show';
+            alertBox.role = 'alert';
+            alertBox.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            document.querySelector('.contact-form').prepend(alertBox);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = document.querySelector('.alert');
+                if (alert) {
+                    const dismissAlert = new bootstrap.Alert(alert);
+                    dismissAlert.close();
+                }
+            }, 5000);
         }
 
         // Función para validar email
@@ -455,7 +687,24 @@
 
         // Función para mostrar éxito
         function showSuccess(message) {
-            alert(message);
+            const alertBox = document.createElement('div');
+            alertBox.className = 'alert alert-success alert-dismissible fade show';
+            alertBox.role = 'alert';
+            alertBox.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            document.querySelector('.contact-form').prepend(alertBox);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = document.querySelector('.alert');
+                if (alert) {
+                    const dismissAlert = new bootstrap.Alert(alert);
+                    dismissAlert.close();
+                }
+            }, 5000);
         }
 
         // Función para simular el envío de correo
@@ -478,14 +727,49 @@
             });
         });
 
-        // Mostrar u ocultar el botón de volver arriba según el scroll
-        window.addEventListener('scroll', function() {
-            const backToTop = document.querySelector('.back-to-top');
-            if (window.pageYOffset > 300) {
-                backToTop.style.display = 'flex';
-            } else {
-                backToTop.style.display = 'none';
-            }
+        // Smooth scroll para los enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Si el navbar está colapsado en dispositivos móviles, cerrarlo al hacer clic
+                    const navbarToggler = document.querySelector('.navbar-toggler');
+                    const navbarCollapse = document.querySelector('.navbar-collapse');
+                    
+                    if (window.getComputedStyle(navbarToggler).display !== 'none' && navbarCollapse.classList.contains('show')) {
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                        bsCollapse.toggle();
+                    }
+                }
+            });
+        });
+
+        // Añadir efecto hover a las imágenes de productos con animación
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const img = this.querySelector('.card-img-top');
+                img.style.transform = 'scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                const img = this.querySelector('.card-img-top');
+                img.style.transform = 'scale(1)';
+            });
         });
     </script>
 </body>
