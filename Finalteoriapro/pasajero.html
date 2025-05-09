@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxiGo - Panel de Pasajero</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff5722;
+      --secondary: #2c3e50;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --info: #2196f3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 100%;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background-color: var(--white);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .logo i {
+      margin-right: 8px;
+    }
+    
+    .map-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    
+    .bottom-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--white);
+      padding: 15px;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .bottom-sheet .handle {
+      width: 40px;
+      height: 5px;
+      background-color: var(--gray);
+      border-radius: 3px;
+      margin: 0 auto 15px;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 50px;
+      background-color: var(--gray);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .status-badge.pending { background-color: var(--warning); }
+    .status-badge.accepted { background-color: var(--info); }
+    .status-badge.completed { background-color: var(--success); }
+    .status-badge.rejected { background-color: var(--danger); }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .input-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--secondary);
+      font-size: 0.9rem;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    
+    .input-group input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2);
+    }
+    
+    .input-group.icon-input {
+      position: relative;
+    }
+    
+    .input-group.icon-input i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    
+    .input-group.icon-input input {
+      padding-left: 45px;
+    }
+    
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background-color: #e64a19;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--white);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #1a252f;
+    }
+    
+    .back-btn {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+      color: var(--secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    
+    .back-btn i {
+      margin-right: 5px;
+    }
+    
+    .price-display {
+      background-color: var(--light);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+    }
+    
+    .price-display .price-label {
+      font-size: 0.9rem;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+    
+    .price-display .price-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .status-message {
+      text-align: center;
+      padding: 10px;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+    
+    .search-location {
+      position: relative;
+      margin-top: 10px;
+    }
+    
+    .search-location i {
+      position: absolute;
+      left: 15px;
+      top: 14px;
+      color: var(--primary);
+    }
+    
+    .destination-input {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .destination-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2);
+    }
+    
+    /* Para pantallas pequeñas */
+    @media (max-width: 768px) {
+      .header {
+        padding: 10px 15px;
+      }
+      
+      .logo {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <button onclick="window.location.href='main.html'" class="back-btn">
+      <i class="fas fa-chevron-left"></i> Volver
+    </button>
+    <div class="logo">
+      <i class="fas fa-taxi"></i> TaxiGo
+    </div>
+    <div style="width: 40px;"></div> <!-- Spacer para balance -->
+  </div>
+  
+  <div class="map-container">
+    <div id="map"></div>
+    
+    <div class="bottom-sheet">
+      <div class="handle"></div>
+      
+      <div id="status-badge" class="status-badge">Nuevo Viaje</div>
+      
+      <div id="ride-form">
+        <div class="input-group">
+          <label for="nombre">Tu nombre</label>
+          <div class="icon-input">
+            <i class="fas fa-user"></i>
+            <input type="text" id="nombre" placeholder="Nombre completo" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="phone-number">Número de teléfono</label>
+          <div class="icon-input">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="phone-number" placeholder="Ej: 8091234567" pattern="[0-9]{10}" required>
+          </div>
+        </div>
+        
+        <div class="search-location">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="destination-street" class="destination-input" placeholder="¿A dónde vas?">
+        </div>
+        
+        <div id="price-estimate" class="price-display">
+          <div class="price-label">Precio Estimado</div>
+          <div class="price-value" id="precio-valor">--</div>
+        </div>
+        
+        <button onclick="calcularPrecioYEnviarSolicitud()" class="btn btn-primary">
+          <i class="fas fa-car"></i> Solicitar Taxi
+        </button>
+
+        <!-- Botón para limpiar datos -->
+        <button onclick="limpiarDatos()" class="btn btn-secondary">
+          <i class="fas fa-trash"></i> Limpiar Datos
+        </button>
+      </div>
+      
+      <div id="estado-solicitud" class="status-message">
+        Completa el formulario para solicitar un taxi
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let mapa, pasajeroOriginLocation = { lat: 18.475, lng: -69.890 };
+  let conductorMarker = null;
+  let bottomSheet;
+  let isDragging = false;
+  let startY, startHeight;
+
+  function initMap() {
+    // Configurar estilo personalizado para el mapa
+    const mapStyles = [
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "poi",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [{ "visibility": "off" }]
+      }
+    ];
+
+    mapa = new google.maps.Map(document.getElementById('map'), {
+      center: pasajeroOriginLocation,
+      zoom: 14,
+      styles: mapStyles,
+      disableDefaultUI: true,
+      zoomControl: true
+    });
+
+    // Inicializar el servicio de direcciones
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: "#2196f3",
+        strokeWeight: 5
+      }
+    });
+    directionsRenderer.setMap(mapa);
+
+    // Marcador personalizado para el pasajero
+    new google.maps.Marker({
+      position: pasajeroOriginLocation,
+      map: mapa,
+      title: "Tu ubicación",
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        fillColor: "#2196f3",
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: "#fff"
+      }
+    });
+
+    updateDriverLocationDisplay();
+    setInterval(updateDriverLocationDisplay, 2000);
+    verificarEstadoSolicitud();
+
+    // Cargar datos del cliente desde localStorage
+    cargarDatosCliente();
+
+    // Configurar el bottom sheet interactivo
+    bottomSheet = document.querySelector('.bottom-sheet');
+    const handle = document.querySelector('.handle');
+
+    handle.addEventListener('mousedown', initDrag);
+    handle.addEventListener('touchstart', initDrag);
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+  
+  function initDrag(e) {
+    isDragging = true;
+    startY = e.pageY || e.touches[0].pageY;
+    startHeight = parseInt(window.getComputedStyle(bottomSheet).height);
+    
+    e.preventDefault();
+  }
+  
+  function drag(e) {
+    if (!isDragging) return;
+    
+    const y = e.pageY || e.touches[0].pageY;
+    const diffY = startY - y;
+    const newHeight = Math.max(100, Math.min(startHeight + diffY, window.innerHeight * 0.9));
+    
+    bottomSheet.style.height = `${newHeight}px`;
+  }
+  
+  function stopDrag() {
+    isDragging = false;
+  }
+
+  function calcularPrecioYEnviarSolicitud() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const telefono = document.getElementById('phone-number').value.trim();
+    const destino = document.getElementById('destination-street').value.trim();
+
+    if (!nombre) {
+      mostrarNotificacion('Por favor ingresa tu nombre', 'warning');
+      return;
+    }
+    if (!telefono.match(/^[0-9]{10}$/)) {
+      mostrarNotificacion('Número de teléfono inválido', 'danger');
+      return;
+    }
+    if (!destino) {
+      mostrarNotificacion('Ingresa una dirección válida', 'warning');
+      return;
+    }
+
+    const precioEstimado = (Math.random() * 150 + 100).toFixed(2);
+    document.getElementById('precio-valor').textContent = `DOP ${precioEstimado}`;
+    document.getElementById('price-estimate').style.display = 'block';
+
+    const trip = {
+      status: 'pending',
+      pasajeroNombre: nombre,
+      pasajeroTelefono: telefono,
+      pasajeroOriginLat: pasajeroOriginLocation.lat,
+      pasajeroOriginLng: pasajeroOriginLocation.lng,
+      pasajeroDestinationAddress: destino,
+      precioEstimado
+    };
+
+    localStorage.setItem('tripRequest', JSON.stringify(trip));
+    document.getElementById('estado-solicitud').textContent = 'Solicitud enviada. Esperando respuesta del conductor.';
+    
+    const statusBadge = document.getElementById('status-badge');
+    statusBadge.textContent = 'Solicitud Pendiente';
+    statusBadge.className = 'status-badge pending';
+    
+    mostrarNotificacion('Solicitud enviada con éxito', 'success');
+  }
+
+  function updateDriverLocationDisplay() {
+    const driverLocStr = localStorage.getItem('driverLocation');
+    if (driverLocStr && mapa) {
+      try {
+        const driverLoc = JSON.parse(driverLocStr);
+        if (driverLoc && typeof driverLoc.lat === 'number') {
+          if (!conductorMarker) {
+            conductorMarker = new google.maps.Marker({
+              position: driverLoc,
+              map: mapa,
+              title: "Conductor",
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: "#ff5722",
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: "#fff"
+              }
+            });
+          } else {
+            conductorMarker.setPosition(driverLoc);
+          }
+          mostrarRutaConductor(); // Mostrar la ruta del conductor
+        }
+      } catch (e) {
+        console.error("Error al actualizar la ubicación del conductor:", e);
+      }
+    }
+  }
+
+  function mostrarRutaConductor() {
+    const driverLocStr = localStorage.getItem('driverLocation');
+    const tripData = JSON.parse(localStorage.getItem('tripRequest'));
+
+    if (driverLocStr && tripData) {
+      const driverLoc = JSON.parse(driverLocStr);
+      const request = {
+        origin: driverLoc,
+        destination: {
+          lat: tripData.pasajeroOriginLat,
+          lng: tripData.pasajeroOriginLng
+        },
+        travelMode: 'DRIVING'
+      };
+
+      directionsService.route(request, function(result, status) {
+        if (status === 'OK') {
+          directionsRenderer.setDirections(result);
+        } else {
+          console.error("No se pudo calcular la ruta:", status);
+        }
+      });
+    }
+  }
+
+  function verificarEstadoSolicitud() {
+    const data = localStorage.getItem('tripRequest');
+    if (data) {
+      try {
+        const trip = JSON.parse(data);
+        const statusBadge = document.getElementById('status-badge');
+        
+        if (trip.status === 'pending') {
+          document.getElementById('estado-solicitud').textContent = 'Solicitud enviada. Esperando respuesta del conductor.';
+          statusBadge.textContent = 'Solicitud Pendiente';
+          statusBadge.className = 'status-badge pending';
+        } else if (trip.status === 'accepted') {
+          document.getElementById('estado-solicitud').textContent = '¡Solicitud aceptada! El conductor está en camino.';
+          statusBadge.textContent = 'Conductor en Camino';
+          statusBadge.className = 'status-badge accepted';
+          
+          // Mostrar precio
+          document.getElementById('precio-valor').textContent = `DOP ${trip.precioEstimado}`;
+          document.getElementById('price-estimate').style.display = 'block';
+        } else if (trip.status === 'driverArrived') {
+          document.getElementById('estado-solicitud').textContent = '¡El conductor ha llegado a tu ubicación!';
+          statusBadge.textContent = 'Conductor Llegó';
+          statusBadge.className = 'status-badge accepted';
+        } else if (trip.status === 'completed') {
+          document.getElementById('estado-solicitud').textContent = 'Viaje completado. ¡Gracias por usar TaxiGo!';
+          statusBadge.textContent = 'Viaje Completado';
+          statusBadge.className = 'status-badge completed';
+        } else if (trip.status === 'rejected') {
+          document.getElementById('estado-solicitud').textContent = 'Solicitud rechazada. Por favor, intenta nuevamente.';
+          statusBadge.textContent = 'Solicitud Rechazada';
+          statusBadge.className = 'status-badge rejected';
+        }
+      } catch (e) {
+        console.error("Error al verificar estado de solicitud:", e);
+      }
+    }
+  }
+
+  function cargarDatosCliente() {
+    const tripData = JSON.parse(localStorage.getItem('tripRequest'));
+    if (tripData) {
+      document.getElementById('nombre').value = tripData.pasajeroNombre || '';
+      document.getElementById('phone-number').value = tripData.pasajeroTelefono || '';
+      document.getElementById('destination-street').value = tripData.pasajeroDestinationAddress || '';
+    }
+  }
+
+  function limpiarDatos() {
+    localStorage.removeItem('tripRequest');
+    localStorage.removeItem('driverLocation');
+    document.getElementById('nombre').value = '';
+    document.getElementById('phone-number').value = '';
+    document.getElementById('destination-street').value = '';
+    document.getElementById('precio-valor').textContent = '--';
+    document.getElementById('price-estimate').style.display = 'none';
+    document.getElementById('estado-solicitud').textContent = 'Datos limpiados. Completa el formulario para solicitar un taxi.';
+    mostrarNotificacion('Datos del cliente limpiados', 'info');
+  }
+
+  function mostrarNotificacion(mensaje, tipo) {
+    // Crear elemento de notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = `notificacion ${tipo}`;
+    notificacion.style.position = 'fixed';
+    notificacion.style.top = '20px';
+    notificacion.style.left = '50%';
+    notificacion.style.transform = 'translateX(-50%)';
+    notificacion.style.backgroundColor = getColorForType(tipo);
+    notificacion.style.color = '#fff';
+    notificacion.style.padding = '10px 20px';
+    notificacion.style.borderRadius = '5px';
+    notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    notificacion.style.zIndex = '1000';
+    notificacion.style.opacity = '0';
+    notificacion.style.transition = 'opacity 0.3s ease-in-out';
+    notificacion.textContent = mensaje;
+    
+    document.body.appendChild(notificacion);
+    
+    // Mostrar notificación
+    setTimeout(() => {
+      notificacion.style.opacity = '1';
+    }, 10);
+    
+    // Ocultar y eliminar después de 3 segundos
+    setTimeout(() => {
+      notificacion.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notificacion);
+      }, 300);
+    }, 3000);
+  }
+  
+  function getColorForType(tipo) {
+    switch(tipo) {
+      case 'success': return '#4caf50';
+      case 'danger': return '#f44336';
+      case 'warning': return '#ff9800';
+      case 'info': return '#2196f3';
+      default: return '#2c3e50';
+    }
+  }
+
+  window.addEventListener('load', () => {
+    verificarEstadoSolicitud();
+    setInterval(verificarEstadoSolicitud, 2000);
+  });
+
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDO__-4-I2Aa67IEc1aJ1JnueM4u6aoQjY&callback=initMap`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+</script>
+</body>
+</html>

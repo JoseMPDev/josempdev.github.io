@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxiGo - Panel de Conductor</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff5722;
+      --secondary: #2c3e50;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --info: #2196f3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 100%;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background-color: var(--white);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .logo i {
+      margin-right: 8px;
+    }
+    
+    .map-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    
+    .bottom-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--white);
+      padding: 15px;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      max-height: 60vh;
+      overflow-y: auto;
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .bottom-sheet .handle {
+      width: 40px;
+      height: 5px;
+      background-color: var(--gray);
+      border-radius: 3px;
+      margin: 0 auto 15px;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 50px;
+      background-color: var(--gray);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .status-badge.pending { background-color: var(--warning); }
+    .status-badge.accepted { background-color: var(--info); }
+    .status-badge.arrived { background-color: var(--primary); }
+    .status-badge.completed { background-color: var(--success); }
+    .status-badge.rejected { background-color: var(--danger); }
+    
+    .ride-info {
+      background-color: var(--light);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .passenger-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .passenger-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-right: 15px;
+    }
+    
+    .passenger-details h3 {
+      font-size: 1.1rem;
+      margin-bottom: 3px;
+    }
+    
+    .destination-info {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    
+    .destination-icon {
+      color: var(--primary);
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .price-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .price-icon {
+      color: var(--success);
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .price-value {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background-color: #e64a19;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--white);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #1a252f;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+    
+    .btn-danger:hover {
+      background-color: #d32f2f;
+    }
+    
+    .back-btn {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+      color: var(--secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    
+    .back-btn i {
+      margin-right: 5px;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-group .btn {
+      flex: 1;
+    }
+
+    /* Estilos para la lista de viajes */
+    #lista-viajes {
+      margin-top: 15px;
+      background-color: var(--light);
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    #viajes-lista {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #viajes-lista li {
+      padding: 10px;
+      border-bottom: 1px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #viajes-lista li button {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    #viajes-lista li button:hover {
+      background-color: #d32f2f;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 10px 15px;
+      }
+      
+      .logo {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <button onclick="window.location.href='main.html'" class="back-btn">
+      <i class="fas fa-chevron-left"></i> Volver
+    </button>
+    <div class="logo">
+      <i class="fas fa-taxi"></i> TaxiGo
+    </div>
+    <div style="width: 40px;"></div> <!-- Spacer for balance -->
+  </div>
+  
+  <div class="map-container">
+    <div id="map"></div>
+    
+    <div class="bottom-sheet">
+      <div class="handle"></div>
+      
+      <div id="status-badge" class="status-badge">Esperando solicitud</div>
+      
+      <div class="ride-info">
+        <div class="passenger-info">
+          <div class="passenger-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="passenger-details">
+            <h3>Pasajero: <span id="nombre-pasajero">--</span></h3>
+            <small>Calificación: ⭐⭐⭐⭐⭐</small>
+          </div>
+        </div>
+        
+        <div class="destination-info">
+          <div class="destination-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div>
+            <p><strong>Destino:</strong></p>
+            <p id="solicitud-destino">Esperando...</p>
+          </div>
+        </div>
+        
+        <div class="price-info">
+          <div class="price-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div>
+            <p><strong>Precio Estimado:</strong></p>
+            <p class="price-value" id="precio-estimado">--</p>
+          </div>
+        </div>
+      </div>
+      
+      <div id="request-actions">
+        <div class="btn-group">
+          <button id="aceptar-btn" class="btn btn-primary" onclick="aceptarSolicitud()">
+            <i class="fas fa-check"></i> Aceptar
+          </button>
+          <button id="rechazar-btn" class="btn btn-danger" onclick="rechazarSolicitud()">
+            <i class="fas fa-times"></i> Rechazar
+          </button>
+        </div>
+      </div>
+      
+      <button id="llegue-btn" style="display:none;" class="btn btn-primary" onclick="llegarAlPasajero()">
+        <i class="fas fa-flag-checkered"></i> He Llegado
+      </button>
+      
+      <button id="completar-btn" style="display:none;" class="btn btn-success" onclick="completarViaje()">
+        <i class="fas fa-check-circle"></i> Completar Viaje
+      </button>
+      
+      <button id="eliminar-solicitud-btn" style="display:none;" class="btn btn-secondary" onclick="eliminarSolicitudCompletada()">
+        <i class="fas fa-trash"></i> Eliminar Solicitud Completada
+      </button>
+      
+      <div id="estado-viaje" style="text-align: center; margin-top: 15px; font-weight: 500;">
+        Esperando solicitud de viaje...
+      </div>
+
+      <!-- Botón para eliminar todos los viajes -->
+      <button onclick="eliminarTodosLosViajes()" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Eliminar Todos los Viajes
+      </button>
+      
+      <!-- Lista de viajes -->
+      <div id="lista-viajes">
+        <h3>Viajes Guardados</h3>
+        <ul id="viajes-lista"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let mapa;
+  let conductorMarker;
+  let directionsService, directionsRenderer;
+  let conductorLocation = { lat: 18.4719, lng: -69.8596 };
+  let bottomSheet;
+  let isDragging = false;
+  let startY, startHeight;
+
+  function initMap() {
+    // Configurar estilo personalizado para el mapa
+    const mapStyles = [
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "featureType": "poi",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [{"visibility": "off"}]
+      }
+    ];
+
+    mapa = new google.maps.Map(document.getElementById('map'), {
+      center: conductorLocation,
+      zoom: 14,
+      styles: mapStyles,
+      disableDefaultUI: true,
+      zoomControl: true
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: false,
+      polylineOptions: {
+        strokeColor: "#ff5722",
+        strokeWeight: 5
+      }
+    });
+    directionsRenderer.setMap(mapa);
+
+    // Marcador personalizado para el conductor
+    conductorMarker = new google.maps.Marker({
+      position: conductorLocation,
+      map: mapa,
+      title: "Conductor",
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 12,
+        fillColor: "#ff5722",
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: "#fff"
+      }
+    });
+
+    actualizarUbicacion();
+    setInterval(actualizarUbicacion, 4000);
+    setInterval(verificarSolicitud, 2000);
+    
+    // Cargar viajes guardados
+    cargarViajes();
+    
+    // Configurar el bottom sheet interactivo
+    bottomSheet = document.querySelector('.bottom-sheet');
+    const handle = document.querySelector('.handle');
+    
+    handle.addEventListener('mousedown', initDrag);
+    handle.addEventListener('touchstart', initDrag);
+    
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+    
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+  
+  function initDrag(e) {
+    isDragging = true;
+    startY = e.pageY || e.touches[0].pageY;
+    startHeight = parseInt(window.getComputedStyle(bottomSheet).height);
+    
+    e.preventDefault();
+  }
+  
+  function drag(e) {
+    if (!isDragging) return;
+    
+    const y = e.pageY || e.touches[0].pageY;
+    const diffY = startY - y;
+    const newHeight = Math.max(100, Math.min(startHeight + diffY, window.innerHeight * 0.9));
+    
+    bottomSheet.style.height = `${newHeight}px`;
+  }
+  
+  function stopDrag() {
+    isDragging = false;
+  }
+
+  function actualizarUbicacion() {
+    conductorLocation.lat += (Math.random() * 0.001 - 0.0005);
+    conductorLocation.lng += (Math.random() * 0.001 - 0.0005);
+    conductorMarker.setPosition(conductorLocation);
+    localStorage.setItem('driverLocation', JSON.stringify(conductorLocation));
+  }
+
+  function verificarSolicitud() {
+    const data = localStorage.getItem('tripRequest');
+    if (!data) return;
+
+    try {
+      const solicitud = JSON.parse(data);
+      if (!solicitud.status) return;
+
+      document.getElementById('nombre-pasajero').textContent = solicitud.pasajeroNombre || '--';
+      document.getElementById('solicitud-destino').textContent = solicitud.pasajeroDestinationAddress || '--';
+      document.getElementById('precio-estimado').textContent = solicitud.precioEstimado ? `DOP ${solicitud.precioEstimado}` : '--';
+
+      const statusBadge = document.getElementById('status-badge');
+      
+      if (solicitud.status === 'pending') {
+        document.getElementById('aceptar-btn').style.display = 'block';
+        document.getElementById('rechazar-btn').style.display = 'block';
+        document.getElementById('request-actions').style.display = 'block';
+        document.getElementById('estado-viaje').textContent = '¡Nueva solicitud de viaje!';
+        statusBadge.textContent = 'Solicitud Pendiente';
+        statusBadge.className = 'status-badge pending';
+      } else if (solicitud.status === 'accepted') {
+        document.getElementById('llegue-btn').style.display = 'block';
+        document.getElementById('request-actions').style.display = 'none';
+        document.getElementById('estado-viaje').textContent = 'Dirígete hacia la ubicación del pasajero.';
+        statusBadge.textContent = 'En Ruta al Pasajero';
+        statusBadge.className = 'status-badge accepted';
+        if (solicitud.pasajeroDestinationAddress) {
+          mostrarRutaAlPasajero(solicitud.pasajeroDestinationAddress);
+        }
+      } else if (solicitud.status === 'driverArrived') {
+        document.getElementById('completar-btn').style.display = 'block';
+        document.getElementById('llegue-btn').style.display = 'none';
+        document.getElementById('estado-viaje').textContent = 'Has llegado al punto de recogida.';
+        statusBadge.textContent = 'En Punto de Recogida';
+        statusBadge.className = 'status-badge arrived';
+      } else if (solicitud.status === 'completed') {
+        document.getElementById('estado-viaje').textContent = '¡Viaje completado con éxito!';
+        document.getElementById('eliminar-solicitud-btn').style.display = 'block';
+        guardarViaje(solicitud); // Guardar el viaje en localStorage
+        eliminarSolicitudCompletada(); // Eliminar la solicitud completada
+        limpiarBotones();
+      } else if (solicitud.status === 'rejected') {
+        document.getElementById('estado-viaje').textContent = 'Has rechazado esta solicitud.';
+        document.getElementById('eliminar-solicitud-btn').style.display = 'block';
+        statusBadge.textContent = 'Solicitud Rechazada';
+        statusBadge.className = 'status-badge rejected';
+        limpiarBotones();
+      }
+    } catch (e) {
+      console.error("Error leyendo solicitud:", e);
+    }
+  }
+
+  function mostrarRutaAlPasajero(destino) {
+    const request = {
+      origin: conductorLocation,
+      destination: destino,
+      travelMode: 'DRIVING'
+    };
+    directionsService.route(request, function(result, status) {
+      if (status === 'OK') {
+        directionsRenderer.setDirections(result);
+        
+        // Centrar el mapa para mostrar toda la ruta
+        const bounds = new google.maps.LatLngBounds();
+        const route = result.routes[0];
+        route.legs.forEach((leg) => {
+          leg.steps.forEach((step) => {
+            step.path.forEach((point) => {
+              bounds.extend(point);
+            });
+          });
+        });
+        mapa.fitBounds(bounds);
+      } else {
+        console.error("No se pudo calcular la ruta:", status);
+      }
+    });
+  }
+
+  function aceptarSolicitud() { 
+    actualizarEstadoSolicitud('accepted');
+    mostrarNotificacion('Has aceptado la solicitud', 'success');
+  }
+  
+  function rechazarSolicitud() { 
+    actualizarEstadoSolicitud('rejected');
+    mostrarNotificacion('Has rechazado la solicitud', 'danger');
+  }
+  
+  function llegarAlPasajero() { 
+    actualizarEstadoSolicitud('driverArrived');
+    mostrarNotificacion('Has llegado al punto de recogida', 'info');
+  }
+  
+  function completarViaje() { 
+    actualizarEstadoSolicitud('completed');
+    mostrarNotificacion('¡Viaje completado con éxito!', 'success');
+  }
+
+  function actualizarEstadoSolicitud(nuevoEstado) {
+    const data = localStorage.getItem('tripRequest');
+    if (!data) return;
+    try {
+      const solicitud = JSON.parse(data);
+      solicitud.status = nuevoEstado;
+      localStorage.setItem('tripRequest', JSON.stringify(solicitud));
+    } catch (e) {
+      console.error("Error actualizando estado:", e);
+    }
+  }
+
+  function limpiarBotones() {
+    document.getElementById('request-actions').style.display = 'none';
+    document.getElementById('llegue-btn').style.display = 'none';
+    document.getElementById('completar-btn').style.display = 'none';
+  }
+
+  function eliminarSolicitudCompletada() {
+    localStorage.removeItem('tripRequest');
+    document.getElementById('estado-viaje').textContent = 'Solicitud eliminada. Esperando nueva solicitud.';
+    limpiarBotones();
+    directionsRenderer.set('directions', null);
+    document.getElementById('nombre-pasajero').textContent = '--';
+    document.getElementById('solicitud-destino').textContent = '--';
+    document.getElementById('precio-estimado').textContent = '--';
+    document.getElementById('eliminar-solicitud-btn').style.display = 'none';
+    
+    const statusBadge = document.getElementById('status-badge');
+    statusBadge.textContent = 'Esperando Solicitud';
+    statusBadge.className = 'status-badge';
+    
+    mostrarNotificacion('Solicitud eliminada', 'info');
+  }
+
+  function guardarViaje(solicitud) {
+    // Obtener viajes guardados
+    const viajesGuardados = JSON.parse(localStorage.getItem('viajes')) || [];
+    viajesGuardados.push(solicitud); // Agregar el nuevo viaje
+    localStorage.setItem('viajes', JSON.stringify(viajesGuardados)); // Guardar en localStorage
+    cargarViajes(); // Cargar la lista de viajes después de guardar
+  }
+
+  function cargarViajes() {
+    const viajesGuardados = JSON.parse(localStorage.getItem('viajes')) || [];
+    const viajesLista = document.getElementById('viajes-lista');
+    viajesLista.innerHTML = ''; // Limpiar la lista antes de cargar
+    viajesGuardados.forEach((viaje, index) => {
+      const li = document.createElement('li');
+      li.textContent = `Pasajero: ${viaje.pasajeroNombre}, Destino: ${viaje.pasajeroDestinationAddress}, Precio: DOP ${viaje.precioEstimado}`;
+      const btnEliminar = document.createElement('button');
+      btnEliminar.textContent = 'Eliminar';
+      btnEliminar.onclick = () => eliminarViaje(index); // Eliminar viaje por índice
+      li.appendChild(btnEliminar);
+      viajesLista.appendChild(li);
+    });
+  }
+
+  function eliminarViaje(index) {
+    const viajesGuardados = JSON.parse(localStorage.getItem('viajes')) || [];
+    viajesGuardados.splice(index, 1); // Eliminar el viaje por índice
+    localStorage.setItem('viajes', JSON.stringify(viajesGuardados)); // Guardar la lista actualizada
+    cargarViajes(); // Recargar la lista de viajes
+  }
+
+  function eliminarTodosLosViajes() {
+    if (confirm("¿Estás seguro de que deseas eliminar todos los viajes?")) {
+      localStorage.removeItem('viajes'); // Eliminar todos los viajes
+      cargarViajes(); // Recargar la lista de viajes
+      mostrarNotificacion('Todos los viajes eliminados', 'info');
+    }
+  }
+
+  function mostrarNotificacion(mensaje, tipo) {
+    // Crear elemento de notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = `notificacion ${tipo}`;
+    notificacion.style.position = 'fixed';
+    notificacion.style.top = '20px';
+    notificacion.style.left = '50%';
+    notificacion.style.transform = 'translateX(-50%)';
+    notificacion.style.backgroundColor = getColorForType(tipo);
+    notificacion.style.color = '#fff';
+    notificacion.style.padding = '10px 20px';
+    notificacion.style.borderRadius = '5px';
+    notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    notificacion.style.zIndex = '1000';
+    notificacion.style.opacity = '0';
+    notificacion.style.transition = 'opacity 0.3s ease-in-out';
+    notificacion.textContent = mensaje;
+    
+    document.body.appendChild(notificacion);
+    
+    // Mostrar notificación
+    setTimeout(() => {
+      notificacion.style.opacity = '1';
+    }, 10);
+    
+    // Ocultar y eliminar después de 3 segundos
+    setTimeout(() => {
+      notificacion.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notificacion);
+      }, 300);
+    }, 3000);
+  }
+  
+  function getColorForType(tipo) {
+    switch(tipo) {
+      case 'success': return '#4caf50';
+      case 'danger': return '#f44336';
+      case 'warning': return '#ff9800';
+      case 'info': return '#2196f3';
+      default: return '#2c3e50';
+    }
+  }
+
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDO__-4-I2Aa67IEc1aJ1JnueM4u6aoQjY&callback=initMap`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+</script>
+</body>
+</html>

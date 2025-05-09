@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxiGo - Servicio de Taxi</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff5722;
+      --secondary: #2c3e50;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --info: #2196f3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 100%;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background-color: var(--white);
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+    
+    .logo i {
+      margin-right: 8px;
+      font-size: 1.8rem;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .welcome-card {
+      background-color: var(--white);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+    }
+    
+    .welcome-header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .welcome-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .welcome-header p {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+    
+    .welcome-body {
+      padding: 20px;
+    }
+    
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .option-card {
+      background-color: var(--light);
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .option-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .option-passenger {
+      border-left-color: var(--success);
+    }
+    
+    .option-passenger:hover {
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+    
+    .option-driver {
+      border-left-color: var(--warning);
+    }
+    
+    .option-driver:hover {
+      background-color: rgba(255, 152, 0, 0.1);
+    }
+    
+    .option-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      border-radius: 50%;
+    }
+    
+    .option-passenger .option-icon {
+      background-color: rgba(76, 175, 80, 0.15);
+      color: var(--success);
+    }
+    
+    .option-driver .option-icon {
+      background-color: rgba(255, 152, 0, 0.15);
+      color: var(--warning);
+    }
+    
+    .option-icon i {
+      font-size: 1.5rem;
+    }
+    
+    .option-text {
+      flex: 1;
+    }
+    
+    .option-text h3 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      color: var(--secondary);
+    }
+    
+    .option-text p {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin: 0;
+    }
+    
+    .option-action {
+      color: var(--primary);
+    }
+    
+    .footer {
+      background-color: var(--white);
+      text-align: center;
+      padding: 15px;
+      color: var(--gray);
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    @media (max-width: 768px) {
+      .welcome-card {
+        max-width: 100%;
+      }
+      
+      .welcome-header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-taxi"></i> TaxiGo
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="welcome-card">
+        <div class="welcome-header">
+          <h1>Bienvenido a TaxiGo</h1>
+          <p>Servicio de taxi seguro y confiable</p>
+        </div>
+        
+        <div class="welcome-body">
+          <p style="text-align: center; margin-bottom: 20px;">Elija la opción que mejor se adapte a sus necesidades.</p>
+          
+          <div class="options-container">
+            <div class="option-card option-passenger" onclick="location.href='pasajero.html'">
+              <div class="option-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="option-text">
+                <h3>Soy Pasajero</h3>
+                <p>Busco un viaje seguro y confiable para llegar a mi destino</p>
+              </div>
+              <div class="option-action">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </div>
+            
+            <div class="option-card option-driver" onclick="location.href='conductor.html'">
+              <div class="option-icon">
+                <i class="fas fa-car"></i>
+              </div>
+              <div class="option-text">
+                <h3>Soy Conductor</h3>
+                <p>Ofrezco mi servicio de transporte para pasajeros</p>
+              </div>
+              <div class="option-action">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>TaxiGo &copy; 2025 - Todos los derechos reservados - República Dominicana</p>
+    </div>
+  </div>
+
+  <script>
+    // Verificar si hay alguna solicitud o dato almacenado previamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const tripRequest = localStorage.getItem('tripRequest');
+      if (tripRequest) {
+        // Si ya existe una solicitud activa, preguntar si desea continuar
+        try {
+          const solicitudData = JSON.parse(tripRequest);
+          if (solicitudData.status === 'pending' || solicitudData.status === 'accepted' || solicitudData.status === 'driverArrived') {
+            mostrarNotificacion('Hay una solicitud de viaje activa', 'info');
+            
+            setTimeout(() => {
+              if (confirm("Hay una solicitud de viaje activa. ¿Desea continuar con ella?")) {
+                location.href = 'pasajero.html';
+              } else if (confirm("¿Desea limpiar todos los datos de simulación?")) {
+                localStorage.clear();
+                mostrarNotificacion('Datos de simulación limpiados', 'success');
+              }
+            }, 500);
+          }
+        } catch (e) {
+          console.error("Error al verificar datos almacenados:", e);
+        }
+      }
+    });
+    
+    function mostrarNotificacion(mensaje, tipo) {
+      // Crear elemento de notificación
+      const notificacion = document.createElement('div');
+      notificacion.className = `notificacion ${tipo}`;
+      notificacion.style.position = 'fixed';
+      notificacion.style.top = '20px';
+      notificacion.style.left = '50%';
+      notificacion.style.transform = 'translateX(-50%)';
+      notificacion.style.backgroundColor = getColorForType(tipo);
+      notificacion.style.color = '#fff';
+      notificacion.style.padding = '10px 20px';
+      notificacion.style.borderRadius = '5px';
+      notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+      notificacion.style.zIndex = '1000';
+      notificacion.style.opacity = '0';
+      notificacion.style.transition = 'opacity 0.3s ease-in-out';
+      notificacion.textContent = mensaje;
+      
+      document.body.appendChild(notificacion);
+      
+      // Mostrar notificación
+      setTimeout(() => {
+        notificacion.style.opacity = '1';
+      }, 10);
+      
+      // Ocultar y eliminar después de 3 segundos
+      setTimeout(() => {
+        notificacion.style.opacity = '0';
+        setTimeout(() => {
+          document.body.removeChild(notificacion);
+        }, 300);
+      }, 3000);
+    }
+    
+    function getColorForType(tipo) {
+      switch(tipo) {
+        case 'success': return '#4caf50';
+        case 'danger': return '#f44336';
+        case 'warning': return '#ff9800';
+        case 'info': return '#2196f3';
+        default: return '#2c3e50';
+      }
+    }
+  </script>
+</body>
+</html>
