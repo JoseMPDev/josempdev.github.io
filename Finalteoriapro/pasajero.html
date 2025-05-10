@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -282,50 +283,55 @@
     <div id="map"></div>
     
     <div class="bottom-sheet">
-      <div class="handle"></div>
-      
-      <div id="status-badge" class="status-badge">Nuevo Viaje</div>
-      
-      <div id="ride-form">
-        <div class="input-group">
-          <label for="nombre">Tu nombre</label>
-          <div class="icon-input">
-            <i class="fas fa-user"></i>
-            <input type="text" id="nombre" placeholder="Nombre completo" required>
-          </div>
-        </div>
-        
-        <div class="input-group">
-          <label for="phone-number">Número de teléfono</label>
-          <div class="icon-input">
-            <i class="fas fa-phone"></i>
-            <input type="tel" id="phone-number" placeholder="Ej: 8091234567" pattern="[0-9]{10}" required>
-          </div>
-        </div>
-        
-        <div class="search-location">
-          <i class="fas fa-map-marker-alt"></i>
-          <input type="text" id="destination-street" class="destination-input" placeholder="¿A dónde vas?">
-        </div>
-        
-        <div id="price-estimate" class="price-display">
-          <div class="price-label">Precio Estimado</div>
-          <div class="price-value" id="precio-valor">--</div>
-        </div>
-        
-        <button onclick="calcularPrecioYEnviarSolicitud()" class="btn btn-primary">
-          <i class="fas fa-car"></i> Solicitar Taxi
-        </button>
+        <div class="handle"></div>
 
-        <!-- Botón para limpiar datos -->
-        <button onclick="limpiarDatos()" class="btn btn-secondary">
-          <i class="fas fa-trash"></i> Limpiar Datos
-        </button>
-      </div>
-      
-      <div id="estado-solicitud" class="status-message">
-        Completa el formulario para solicitar un taxi
-      </div>
+        <div id="status-badge" class="status-badge">Nuevo Viaje</div>
+
+        <div id="ride-form">
+            <div class="input-group">
+                <label for="nombre">Tu nombre</label>
+                <div class="icon-input">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="nombre" placeholder="Nombre completo" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="phone-number">Número de teléfono</label>
+                <div class="icon-input">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="phone-number" placeholder="Ej: 8091234567" pattern="[0-9]{10}" required>
+                </div>
+            </div>
+
+            <div class="search-location">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="destination-street" class="destination-input" placeholder="¿A dónde vas?">
+            </div>
+
+            <div id="price-estimate" class="price-display">
+                <div class="price-label">Precio Estimado</div>
+                <div class="price-value" id="precio-valor">--</div>
+            </div>
+
+            <button onclick="calcularPrecioYEnviarSolicitud()" class="btn btn-primary">
+                <i class="fas fa-car"></i> Solicitar Taxi
+            </button>
+
+            <!-- Botón para limpiar datos -->
+            <button onclick="limpiarDatos()" class="btn btn-secondary">
+                <i class="fas fa-trash"></i> Limpiar Datos
+            </button>
+
+            <!-- Boton para realizar pago -->
+            <button onclick="completarPago()" class="btn btn-success">
+                <i class="fas fa-credit-card"></i> Completar Pago
+            </button>
+        </div>
+
+        <div id="estado-solicitud" class="status-message">
+            Completa el formulario para solicitar un taxi
+        </div>
     </div>
   </div>
 </div>
@@ -581,6 +587,21 @@
       document.getElementById('destination-street').value = tripData.pasajeroDestinationAddress || '';
     }
   }
+
+
+    function completarPago() {
+        const data = localStorage.getItem('tripRequest');
+        if (!data) return;
+
+        try {
+            const trip = JSON.parse(data);
+            trip.pagado = true;
+            localStorage.setItem('tripRequest', JSON.stringify(trip));
+            mostrarNotificacion('Pago completado con éxito', 'success');
+        } catch (e) {
+            console.error("Error al completar pago:", e);
+        }
+    }
 
   function limpiarDatos() {
     localStorage.removeItem('tripRequest');

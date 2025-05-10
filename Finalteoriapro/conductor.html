@@ -583,10 +583,22 @@
     mostrarNotificacion('Has llegado al punto de recogida', 'info');
   }
   
-  function completarViaje() { 
-    actualizarEstadoSolicitud('completed');
-    mostrarNotificacion('¡Viaje completado con éxito!', 'success');
-  }
+    function completarViaje() {
+        const data = localStorage.getItem('tripRequest');
+        if (!data) return;
+
+        try {
+            const solicitud = JSON.parse(data);
+            if (solicitud.pagado) {
+                actualizarEstadoSolicitud('completed');
+                mostrarNotificacion('¡Viaje completado con éxito!', 'success');
+            } else {
+                mostrarNotificacion('El pasajero aún no ha realizado el pago.', 'warning');
+            }
+        } catch (e) {
+            console.error("Error verificando pago:", e);
+        }
+    }
 
   function actualizarEstadoSolicitud(nuevoEstado) {
     const data = localStorage.getItem('tripRequest');
